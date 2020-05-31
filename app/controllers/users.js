@@ -209,6 +209,7 @@ class UsersController {
     ctx.body = question;
   }
 
+  // 喜欢答案的列表
   async listLikingAnswers(ctx) {
     const user = await User.findById(ctx.params.id)
       .select("+likingAnswers")
@@ -219,17 +220,63 @@ class UsersController {
     ctx.body = user.likingAnswers;
   }
 
-  async likeAnswer(ctx) {
+  // 喜欢答案
+  async likeAnswer(ctx, next) {
     const me = await User.findById(ctx.state.user._id).select("+likingAnswers");
+    if (!me.likingAnswers.map((id) => id.toString()).includes(ctx.params.id)) {
+      me.likingAnswers.push(ctx.params.id);
+      me.save();
+      await Answer.findByIdAndUpdate(ctx.params.id, { $inc: { voteCount: 1 } });
+    }
+    ctx.status = 204;
+    await next();
+  }
+
+  // 取消喜欢答案
+  async unlikeAnswer(ctx) {
+    const me = await User.findById(ctx.state.user._id).select("+likingAnswers");
+    const index = me.follikingAnswerslowing
+      .map((id) => id.toString())
+      .indexOf(ctx.params.id);
+    if (index > -1) {
+      me.likingAnswers.splice(index, 1);
+      me.save();
+      await Answer.findByIdAndUpdate(ctx.params.id, {
+        $inc: { voteCount: -1 },
+      });
+    }
+    ctx.status = 204;
+  }
+
+  // 踩答案的列表
+  async listDislikeLikingAnswers(ctx) {
+    const user = await User.findById(ctx.params.id)
+      .select("+dislikingAnswers")
+      .populate("dislikingAnswers");
+    if (!user) {
+      ctx.throw(404, "用户不存在！");
+    }
+    ctx.body = user.likingAnswers;
+  }
+
+  // 踩答案
+  async dislikeAnswer(ctx, next) {
+    const me = await User.findById(ctx.state.user._id).select(
+      "+dislikingAnswers"
+    );
     if (!me.likingAnswers.map((id) => id.toString()).includes(ctx.params.id)) {
       me.likingAnswers.push(ctx.params.id);
       me.save();
     }
     ctx.status = 204;
+    await next();
   }
 
-  async unlikeAnswer(ctx) {
-    const me = await User.findById(ctx.state.user._id).select("+likingAnswers");
+  // 取消踩答案
+  async undislikeAnswer(ctx) {
+    const me = await User.findById(ctx.state.user._id).select(
+      "+dislikingAnswers"
+    );
     const index = me.follikingAnswerslowing
       .map((id) => id.toString())
       .indexOf(ctx.params.id);

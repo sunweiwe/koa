@@ -22,10 +22,18 @@ const {
   unfollowTopic,
   listFollowingTopics,
   listQuestions,
+
+  // 赞的接口
+  listLikingAnswers,
+  likeAnswer,
+  unlikeAnswer,
+  // 踩的接口
+  listDislikeLikingAnswers,
+  dislikeAnswer,
+  undislikeAnswer,
 } = require("../controllers/users");
-const {
-  checkTopicExist
-} = require("../controllers/topic");
+const { checkTopicExist } = require("../controllers/topic");
+const { checkAnswerExist } = require("../controllers/answer");
 
 // const auth = async (ctx, next) => {
 //   const { authorization = "" } = ctx.request.header;
@@ -39,9 +47,7 @@ const {
 //   await next();
 // };
 
-const auth = jwt({ secret })
-
-
+const auth = jwt({ secret });
 
 router.get("/", find);
 
@@ -70,5 +76,31 @@ router.put("/followingTopic/:id", auth, checkTopicExist, followTopic);
 router.delete("/followingTopic/:id", auth, checkTopicExist, unfollowTopic);
 
 router.get("/:id/questions", listQuestions);
+
+// 赞
+router.get("/:id/likingAnswers", listLikingAnswers);
+
+router.put(
+  "/likingAnswers/:id",
+  auth,
+  checkAnswerExist,
+  likeAnswer,
+  undislikeAnswer
+);
+
+router.delete("/likingAnswers/:id", auth, checkAnswerExist, unlikeAnswer);
+
+// 踩;
+router.get("/:id/dislikingAnswers", listDislikeLikingAnswers);
+
+router.put(
+  "/dislikingAnswers/:id",
+  auth,
+  checkAnswerExist,
+  dislikeAnswer,
+  unlikeAnswer
+);
+
+router.delete("/dislikingAnswers/:id", auth, checkAnswerExist, undislikeAnswer);
 
 module.exports = router;
