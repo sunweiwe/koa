@@ -5,9 +5,11 @@ const jwt = require("koa-jwt");
 
 const { secret } = require("../config");
 
+const { find, findById, createUser } = require("../controller/user");
+
 const {
-  find,
-  findById,
+  // find,
+  // findById,
   delete: del,
   update,
   create,
@@ -51,7 +53,7 @@ const auth = jwt({ secret });
 
 router.get("/", find);
 
-router.post("/", create);
+router.post("/", createUser);
 
 router.get("/:id", findById);
 
