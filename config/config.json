@@ -1,0 +1,56 @@
+{
+  "development": {
+    "username": "root",
+    "password": "3er4#ER$",
+    "database": "node",
+    "host": "localhost",
+    "dialect": "mysql",
+    "pool": {
+      "max": 5,
+      "min": 0,
+      "acquire": 30000,
+      "idle": 10000
+    },
+    "define": {
+      "timestamps": false,
+      "freezeTableName": true
+    },
+    "timezone": "+08:00"
+  },
+  "test": {
+    "username": "root",
+    "password": "3er4#ER$",
+    "database": "node",
+    "host": "localhost",
+    "dialect": "mysql",
+    "pool": {
+      "max": 5,
+      "min": 0,
+      "acquire": 30000,
+      "idle": 10000
+    },
+    "define": {
+      "timestamps": false,
+      "freezeTableName": true
+    },
+    "timezone": "+08:00"
+  },
+  "production": {
+    "username": "root",
+    "password": "3er4#ER$",
+    "database": "node",
+    "host": "localhost",
+    "dialect": "mysql",
+    "pool": {
+      "max": 5,
+      "min": 0,
+      "acquire": 30000,
+      "idle": 10000
+    },
+    "define": {
+      "timestamps": false,
+      "freezeTableName": true
+    },
+    "timezone": "+08:00"
+  }
+}

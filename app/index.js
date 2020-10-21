@@ -1,15 +1,13 @@
-const Koa = require("koa");
-const bodyparser = require("koa-body");
-const error = require("koa-json-error");
-const parameter = require("koa-parameter");
-const mongoose = require("mongoose");
-const koaStatic = require("koa-static");
-const path = require("path");
+const Koa = require('koa');
+const bodyparser = require('koa-body');
+const error = require('koa-json-error');
+const parameter = require('koa-parameter');
+const mongoose = require('mongoose');
+const koaStatic = require('koa-static');
+const path = require('path');
 
-const { connectionStr } = require("./config");
-
-const routing = require("./routes");
-const db = require("./model");
+const routing = require('./routes');
+const db = require('../models/index.js');
 
 const app = new Koa();
 
@@ -33,12 +31,12 @@ const app = new Koa();
 //   }
 // })
 
-app.use(koaStatic(path.join(__dirname, "public")));
+app.use(koaStatic(path.join(__dirname, 'public')));
 
 app.use(
   error({
     postFormat: (e, { stack, ...rest }) =>
-      process.env.NODE_ENV === "production" ? rest : { stack, ...rest },
+      process.env.NODE_ENV === 'production' ? rest : { stack, ...rest },
   })
 );
 
@@ -46,7 +44,7 @@ app.use(
   bodyparser({
     multipart: true,
     formidable: {
-      uploadDir: path.join(__dirname, "/public/uploads"),
+      uploadDir: path.join(__dirname, '/public/uploads'),
       keepExtensions: true,
     },
   })
@@ -56,15 +54,10 @@ routing(app);
 
 app.listen(30000, () => {
   db.sequelize
-    .sync({ force: false, logging: false }) // If force is true, each DAO will do DROP TABLE IF EXISTS ..., before it tries to create its own table
-    .then(async () => {
-      // const initData = require('./initData')
-      // initData() // 创建初始化数据
-      console.log("sequelize connect success");
-      // console.log(`sever listen on http://127.0.0.1:${config.PORT}`)
-    })
-    .catch((err) => {
+    .sync({ force: false, logging: false })
+    .then(async () => {})
+    .catch(err => {
       console.log(err);
     });
-  console.log("程序已启动！");
+  console.log('程序已启动！');
 });
