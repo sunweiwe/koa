@@ -2,12 +2,12 @@ const Koa = require('koa');
 const bodyparser = require('koa-body');
 const error = require('koa-json-error');
 const parameter = require('koa-parameter');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const koaStatic = require('koa-static');
 const path = require('path');
 
 const routing = require('./routes');
-const db = require('../models/index.js');
+const db = require('./models/index.js');
 
 const app = new Koa();
 
@@ -52,7 +52,18 @@ app.use(
 app.use(parameter(app));
 routing(app);
 
-app.listen(30000, () => {
+app.on('error', (err, ctx) => {
+  console.error('server error', err, ctx);
+});
+
+app.listen(30000, async () => {
+  try {
+    await db.sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+
   db.sequelize
     .sync({ force: false, logging: false })
     .then(async () => {})
