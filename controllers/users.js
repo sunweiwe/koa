@@ -1,15 +1,11 @@
 const { sequelize } = require('../models/index.js');
-const jsonwebtoken = require('jsonwebtoken');
 
+// const jsonwebtoken = require('jsonwebtoken');
 // const { secret } = require('../config');
 
 class UsersController {
-  //
-
   async find(ctx) {
-    const users = await sequelize.models.Users.findAll({
-      // attributes: ['name'],
-    });
+    const users = await sequelize.models.Users.findAll();
     ctx.response.status = 200;
 
     ctx.body = {
@@ -70,7 +66,7 @@ class UsersController {
     ctx.body = user;
   }
 
-  async delete(ctx) {
+  async deleteUser(ctx) {
     const user = ctx.request.body;
 
     await sequelize.models.Users.destroy({
