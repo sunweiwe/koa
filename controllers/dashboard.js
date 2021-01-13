@@ -1,16 +1,26 @@
 const { sequelize } = require('../models/index.js');
-
-// const jsonwebtoken = require('jsonwebtoken');
-// const { secret } = require('../config');
+const auth = require('../utils/auth');
 
 class DashBoardController {
+  /**
+   * dashboard list
+   * @param {*} ctx
+   */
   async find(ctx) {
-    const dashboards = await sequelize.models.DashBoard.findAll();
+    const token = ctx.header.authorization;
+    console.log(token);
+
+    const decryptToken = auth.decrypt(token);
+    console.log(decryptToken);
+    const dashboards = await sequelize.models.Dashboards.findAll();
+
     ctx.response.status = 200;
+    const session = ctx.session;
 
     ctx.body = {
       status: 200,
-      users: dashboards,
+      data: dashboards,
+      token: session[decryptToken.data.name],
       message: '查询成功',
     };
   }

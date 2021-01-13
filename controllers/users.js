@@ -1,7 +1,6 @@
 const { sequelize } = require('../models/index.js');
-
-// const jsonwebtoken = require('jsonwebtoken');
-// const { secret } = require('../config');
+const jsonwebtoken = require('jsonwebtoken');
+const { secret } = require('../config/index.js');
 
 class UsersController {
   async find(ctx) {
@@ -76,6 +75,39 @@ class UsersController {
     });
 
     ctx.status = 204;
+  }
+
+  async login(ctx) {
+    const user = ctx.request.body;
+
+    const repeatUser = await sequelize.models.Users.findOne({
+      where: {
+        phone: user.phone,
+      },
+    });
+
+    if (!repeatUser) {
+      ctx.throw(404, '用户不存在！');
+    }
+
+    if (user && user.phone) {
+      let userToken = {
+        phone: user.phone,
+      };
+      const token = jsonwebtoken.sign(userToken, secret, { expiresIn: '1h' }); //token签名 有效期为1小时
+      const session = ctx.session;
+      session[user.phone] = token;
+      ctx.body = {
+        message: '获取token成功',
+        code: 1,
+        token,
+      };
+    } else {
+      ctx.body = {
+        message: '参数错误',
+        code: -1,
+      };
+    }
   }
 }
 
