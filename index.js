@@ -1,16 +1,39 @@
-const Koa = require('koa');
-const path = require('path');
+const { ApolloServer, gql } = require('apollo-server-koa');
+const session = require('koa-generic-session');
 const bodyparser = require('koa-body');
 const error = require('koa-json-error');
 const parameter = require('koa-parameter');
 const koaStatic = require('koa-static');
-const session = require('koa-generic-session');
 const redisStore = require('koa-redis');
+const Koa = require('koa');
+const path = require('path');
 
+/**
+ *
+ */
 const routing = require('./routes');
 const db = require('./models/index.js');
 
+/**
+ *
+ */
+// Construct a schema, using GraphQL schema language
+const typeDefs = gql`
+  type Query {
+    hello: String
+  }
+`;
+
+// Provide resolver functions for your schema fields
+const resolvers = {
+  Query: {
+    hello: () => 'Hello world!',
+  },
+};
+
+const server = new ApolloServer({ typeDefs, resolvers });
 const app = new Koa();
+server.applyMiddleware({ app });
 
 app.keys = ['keys', ''];
 
@@ -60,5 +83,6 @@ app.listen(3000, async () => {
     .catch((err) => {
       console.log(err);
     });
-  console.log('程序已启动！');
+
+  console.log(`🚀 Server ready at http://localhost:3000${server.graphqlPath}`);
 });

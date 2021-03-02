@@ -14,8 +14,10 @@
   "author": "sun",
   "license": "ISC",
   "dependencies": {
+    "apollo-server-koa": "^2.21.0",
     "bcryptjs": "^2.4.3",
     "cross-env": "^7.0.3",
+    "graphql": "^15.5.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.1",
     "koa-body": "^4.1.1",
