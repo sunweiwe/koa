@@ -1,4 +1,4 @@
-const { sequelize } = require('../models/index.js');
+const { sequelize } = require('../model/index.js');
 const jsonwebtoken = require('jsonwebtoken');
 const { secret } = require('../config/index.js');
 

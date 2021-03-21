@@ -1,5 +1,5 @@
-const { sequelize } = require('../models/index.js');
-const auth = require('../utils/auth');
+const { sequelize } = require('../model/index.js');
+const auth = require('../util/auth');
 
 class DashBoardController {
   /**
@@ -8,10 +8,8 @@ class DashBoardController {
    */
   async find(ctx) {
     const token = ctx.header.authorization;
-    console.log(token);
 
     const decryptToken = auth.decrypt(token);
-    console.log(decryptToken);
     const dashboards = await sequelize.models.Dashboards.findAll();
 
     ctx.response.status = 200;
@@ -23,6 +21,8 @@ class DashBoardController {
       token: session[decryptToken.data.name],
       message: '查询成功',
     };
+
+    return dashboards;
   }
 }
 

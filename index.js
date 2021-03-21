@@ -11,25 +11,10 @@ const path = require('path');
 /**
  *
  */
-const routing = require('./routes');
-const db = require('./models/index.js');
-
-/**
- *
- */
-// Construct a schema, using GraphQL schema language
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
-
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-};
+const routing = require('./src/routes');
+const db = require('./src/model/index.js');
+const typeDefs = require('./src/apollo/schema/index');
+const resolvers = require('./src/apollo/resolver/index');
 
 const server = new ApolloServer({ typeDefs, resolvers });
 const app = new Koa();
