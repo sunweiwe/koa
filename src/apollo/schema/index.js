@@ -3,6 +3,7 @@
 const { gql } = require('apollo-server-koa');
 const typeDefs = gql`
   type Dashboard {
+    id: ID
     title: String
     content: String
     desc: String
@@ -14,7 +15,8 @@ const typeDefs = gql`
   type Query {
     books: String
     hello: String
-    dashboards: Dashboard
+    dashboards: [Dashboard]
+    getDashBoardById(id: ID!): Dashboard
   }
 `;
 module.exports = typeDefs;

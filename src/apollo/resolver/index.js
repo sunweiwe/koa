@@ -1,20 +1,24 @@
 // Provide resolver functions for your schema fields
-const DashBoardController = require('../../controller/dashboard');
+const { sequelize } = require('../../model/index.js');
 
 const resolvers = {
   Query: {
     books: () => 'books',
     hello: () => 'Hello world!',
-    dashboards: () => [
-      {
-        title: '1',
-        content: '2',
-        desc: '4',
-        tag: '2',
-        createBy: '1',
-        modifyBy: '1',
-      },
-    ],
+    dashboards: async () => {
+      const dashboards = await sequelize.models.Dashboards.findAll();
+
+      return dashboards;
+    },
+    getDashBoardById: async (parent, args, context, info) => {
+      const [dashboards] = await sequelize.models.Dashboards.findAll({
+        where: {
+          id: args.id,
+        },
+      });
+
+      return dashboards;
+    },
   },
 };
 module.exports = resolvers;
