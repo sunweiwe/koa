@@ -1,11 +1,11 @@
 const Router = require('koa-router');
-const router = new Router({ prefix: '/api/rest/users' });
+const router = new Router({ prefix: '/api/rest/user' });
 
 const jwt = require('koa-jwt');
 const { secret } = require('../config/index.js');
 const auth = jwt({ secret });
 
-const { find, findById, create, deleteUser } = require('../controller/users');
+const { find, findById, create, deleteUser } = require('../controller/user');
 
 router.get('/', find);
 

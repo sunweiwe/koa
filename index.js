@@ -8,27 +8,73 @@ const redisStore = require('koa-redis');
 const Koa = require('koa');
 const path = require('path');
 
+// 启动端口
+const port = 4000;
+
 /**
- *
+ * restful
+ * 路由
  */
 const routing = require('./src/routes');
-const db = require('./src/model/index.js');
-const typeDefs = require('./src/apollo/schema/index');
-const resolvers = require('./src/apollo/resolver/index');
 
-const server = new ApolloServer({ typeDefs, resolvers });
+/**
+ * mysql config
+ */
+const db = require('./src/model/index.js');
+
+const typeDefs = require('./src/apollo/typeDefs.js');
+const resolvers = require('./src/apollo/resolver.js');
+
+/**
+ * apollo server
+ */
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  cors: true,
+  bodyParserConfig: true,
+  // mocks: true,
+  tracing: true,
+  formatError: (error) => {
+    return {
+      code: error.extensions.code,
+      message: error.message,
+    };
+  },
+  context: ({ ctx: { request } }) => {
+    const token = request.headers.authorization || '';
+    const user = getUser(token);
+    if (!user) throw new AuthenticationError('you must be logged in');
+
+    return { user };
+  },
+});
+
+/**
+ *  向apollo server注入 koa
+ */
 const app = new Koa();
 server.applyMiddleware({ app });
 
 app.keys = ['keys', ''];
 
+/**
+ * session
+ */
 app.use(
   session({
     store: redisStore({}),
   }),
 );
 
+/**
+ * restful 文件上传中间件
+ */
 app.use(koaStatic(path.join(__dirname, 'public')));
+
+/**
+ * 格式化错误日志输出
+ */
 
 app.use(
   error({
@@ -37,6 +83,13 @@ app.use(
   }),
 );
 
+app.on('error', (err, ctx) => {
+  console.error('server error', err, ctx);
+});
+
+/**
+ * body parser
+ */
 app.use(
   bodyparser({
     multipart: true,
@@ -47,14 +100,21 @@ app.use(
   }),
 );
 
+/**
+ * 中间件
+ * 校验参数
+ */
 app.use(parameter(app));
+
+/**
+ * 注册路由
+ */
 routing(app);
 
-app.on('error', (err, ctx) => {
-  console.error('server error', err, ctx);
-});
-
-app.listen(3000, async () => {
+/**
+ *
+ */
+app.listen(port, async () => {
   try {
     await db.sequelize.authenticate();
     console.log('Connection has been established successfully.');
@@ -69,5 +129,5 @@ app.listen(3000, async () => {
       console.log(err);
     });
 
-  console.log(`🚀 Server ready at http://localhost:3000${server.graphqlPath}`);
+  console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`);
 });

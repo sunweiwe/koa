@@ -1,0 +1,20 @@
+type Form {
+  id: ID
+  title: String
+  content: String
+  desc: String
+  tag: String
+  createBy: String
+  modifyBy: String
+}
+
+type Query {
+  books: String
+  hello: String
+  forms: [Form]
+  getFormById(id: ID!): Form
+}
+
+type Mutation {
+  addBook(title: String!, content: String!): Form
+}

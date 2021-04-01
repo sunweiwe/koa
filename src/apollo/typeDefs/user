@@ -1,0 +1,35 @@
+type User {
+  id: ID
+  username: String
+  password: String
+  email: String
+  sex: String
+  name: String
+  age: String
+  phone:String
+  degree:Int
+  createBy: String
+  modifyBy: String
+}
+
+extend type Query {
+  getAllUsers:[User]
+  getUserById(id: ID!): User
+}
+
+input UserInput {
+  username: String!
+  password: String!
+  phone:String!
+  email: String
+  sex: String
+  name: String
+  age: String
+  degree:Int
+  createBy: String
+  modifyBy: String
+}
+
+extend type Mutation {
+  addUser(user:UserInput):User
+}

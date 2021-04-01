@@ -2,9 +2,9 @@ const { sequelize } = require('../model/index.js');
 const jsonwebtoken = require('jsonwebtoken');
 const { secret } = require('../config/index.js');
 
-class UsersController {
+class UserController {
   async find(ctx) {
-    const users = await sequelize.models.Users.findAll();
+    const users = await sequelize.models.User.findAll();
     ctx.response.status = 200;
 
     ctx.body = {
@@ -17,7 +17,7 @@ class UsersController {
   async findById(ctx) {
     const { id = '' } = ctx.params;
 
-    const user = await await sequelize.models.Users.findOne({
+    const user = await await sequelize.models.User.findOne({
       where: {
         id,
       },
@@ -33,7 +33,7 @@ class UsersController {
 
   async create(ctx) {
     const user = ctx.request.body;
-    const repeatUser = await sequelize.models.Users.findOne({
+    const repeatUser = await sequelize.models.User.findOne({
       where: {
         phone: user.phone,
       },
@@ -41,7 +41,7 @@ class UsersController {
     if (repeatUser) {
       ctx.throw(409, '用户已经存在！');
     }
-    await sequelize.models.Users.create(user);
+    await sequelize.models.User.create(user);
 
     ctx.body = user;
   }
@@ -49,7 +49,7 @@ class UsersController {
   async update(ctx) {
     const user = ctx.request.body;
 
-    const repeatUser = await sequelize.models.Users.findOne({
+    const repeatUser = await sequelize.models.User.findOne({
       where: {
         id: user.id,
       },
@@ -57,7 +57,7 @@ class UsersController {
     if (!repeatUser) {
       ctx.throw(404, '用户不存在！');
     }
-    await sequelize.models.Users.update(user, {
+    await sequelize.models.User.update(user, {
       where: {
         id: user.id,
       },
@@ -68,7 +68,7 @@ class UsersController {
   async deleteUser(ctx) {
     const user = ctx.request.body;
 
-    await sequelize.models.Users.destroy({
+    await sequelize.models.User.destroy({
       where: {
         id: user.id,
       },
@@ -80,7 +80,7 @@ class UsersController {
   async login(ctx) {
     const user = ctx.request.body;
 
-    const repeatUser = await sequelize.models.Users.findOne({
+    const repeatUser = await sequelize.models.User.findOne({
       where: {
         phone: user.phone,
       },
@@ -111,4 +111,4 @@ class UsersController {
   }
 }
 
-module.exports = new UsersController();
+module.exports = new UserController();
