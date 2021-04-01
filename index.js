@@ -8,6 +8,11 @@ const redisStore = require('koa-redis');
 const Koa = require('koa');
 const path = require('path');
 
+/**
+ *
+ */
+const auth = require('./src/utils/auth');
+
 // 启动端口
 const port = 4000;
 
@@ -42,11 +47,11 @@ const server = new ApolloServer({
     };
   },
   context: ({ ctx: { request } }) => {
+    // TODO auth
     const token = request.headers.authorization || '';
-    const user = getUser(token);
-    if (!user) throw new AuthenticationError('you must be logged in');
-
-    return { user };
+    // const user = getUser(token);
+    // if (!user) throw new AuthenticationError('you must be logged in');
+    // return { user };
   },
 });
 
