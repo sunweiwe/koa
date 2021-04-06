@@ -2,7 +2,6 @@ const { sequelize } = require('../../model/index.js');
 
 const resolvers = {
   Query: {
-    books: () => 'books',
     hello: () => 'Hello world!',
     /**
      *
@@ -29,6 +28,12 @@ const resolvers = {
       });
 
       return forms;
+    },
+  },
+  Mutation: {
+    addForm: async (_, { form }, context, info) => {
+      await sequelize.models.Form.create(form);
+      return form;
     },
   },
 };

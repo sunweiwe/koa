@@ -9,12 +9,21 @@ type Form {
 }
 
 type Query {
-  books: String
   hello: String
   forms: [Form]
   getFormById(id: ID!): Form
 }
 
+input FormInput {
+  title: String!
+  content: String
+  desc: String 
+  tag: String 
+  createBy: String
+  modifyBy: String
+}
+
+
 type Mutation {
-  addBook(title: String!, content: String!): Form
+  addForm(form:FormInput): Form
 }
