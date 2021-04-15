@@ -7,12 +7,12 @@ const auth = jwt({ secret });
 
 const { find, findById, create, deleteUser } = require('../controller/user');
 
-router.get('/', find);
+router.get('/', auth, find);
 
-router.get('/:id', findById);
+router.get('/:id', auth, findById);
 
 router.post('/', create);
 
-router.delete('/:id', deleteUser);
+router.delete('/:id', auth, deleteUser);
 
 module.exports = router;

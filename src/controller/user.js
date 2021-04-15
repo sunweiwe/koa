@@ -3,6 +3,10 @@ const jsonwebtoken = require('jsonwebtoken');
 const { secret } = require('../config/index.js');
 
 class UserController {
+  /**
+   *
+   * @param {*} ctx
+   */
   async find(ctx) {
     const users = await sequelize.models.User.findAll();
     ctx.response.status = 200;
@@ -14,7 +18,15 @@ class UserController {
     };
   }
 
+  /**
+   *
+   * @param {*} ctx
+   */
   async findById(ctx) {
+    ctx.verifyParams({
+      id: { type: 'string', required: true },
+    });
+
     const { id = '' } = ctx.params;
 
     const user = await await sequelize.models.User.findOne({
@@ -28,10 +40,23 @@ class UserController {
     }
     ctx.body = {
       user: user,
+      code: 200,
+      message: '查询成功！',
     };
   }
 
+  /**
+   *
+   * @param {*} ctx
+   */
   async create(ctx) {
+    ctx.verifyParams({
+      phone: {
+        type: 'string',
+        required: true,
+      },
+    });
+
     const user = ctx.request.body;
     const repeatUser = await sequelize.models.User.findOne({
       where: {
@@ -46,6 +71,10 @@ class UserController {
     ctx.body = user;
   }
 
+  /**
+   *
+   * @param {*} ctx
+   */
   async update(ctx) {
     const user = ctx.request.body;
 
@@ -65,7 +94,18 @@ class UserController {
     ctx.body = user;
   }
 
+  /**
+   *
+   * @param {*} ctx
+   */
   async deleteUser(ctx) {
+    ctx.verifyParams({
+      id: { type: 'string', required: true },
+      phone: {
+        type: 'string',
+        required: true,
+      },
+    });
     const user = ctx.request.body;
 
     await sequelize.models.User.destroy({
@@ -76,8 +116,15 @@ class UserController {
 
     ctx.status = 204;
   }
-
+  /**
+   *
+   * @param {*} ctx
+   */
   async login(ctx) {
+    ctx.verifyParams({
+      password: { type: 'string', required: true },
+      phone: { type: 'string', required: true },
+    });
     const user = ctx.request.body;
 
     const repeatUser = await sequelize.models.User.findOne({
@@ -86,28 +133,25 @@ class UserController {
       },
     });
 
+    if (repeatUser.password !== user.password) {
+      ctx.throw(500, '密码错误！');
+    }
+
     if (!repeatUser) {
       ctx.throw(404, '用户不存在！');
     }
 
-    if (user && user.phone) {
-      let userToken = {
-        phone: user.phone,
-      };
-      const token = jsonwebtoken.sign(userToken, secret, { expiresIn: '1h' }); //token签名 有效期为1小时
-      const session = ctx.session;
-      session[user.phone] = token;
-      ctx.body = {
-        message: '获取token成功',
-        code: 1,
-        token,
-      };
-    } else {
-      ctx.body = {
-        message: '参数错误',
-        code: -1,
-      };
-    }
+    let userToken = {
+      phone: user.phone,
+    };
+    const token = jsonwebtoken.sign(userToken, secret, { expiresIn: '1h' }); //token签名 有效期为1小时
+    const session = ctx.session;
+    session[user.phone] = token;
+    ctx.body = {
+      message: '获取token成功',
+      code: 200,
+      token,
+    };
   }
 }
 

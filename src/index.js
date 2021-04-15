@@ -11,7 +11,7 @@ const path = require('path');
 /**
  *
  */
-const auth = require('./src/utils/auth');
+const auth = require('./utils/auth');
 
 // 启动端口
 const port = 4000;
@@ -20,15 +20,15 @@ const port = 4000;
  * restful
  * 路由
  */
-const routing = require('./src/routes');
+const routing = require('./routes');
 
 /**
  * mysql config
  */
-const db = require('./src/model/index.js');
+const db = require('./model/index.js');
 
-const typeDefs = require('./src/apollo/typeDefs.js');
-const resolvers = require('./src/apollo/resolver.js');
+const typeDefs = require('./apollo/typeDefs.js');
+const resolvers = require('./apollo/resolver.js');
 
 /**
  * apollo server
@@ -80,7 +80,6 @@ app.use(koaStatic(path.join(__dirname, 'public')));
 /**
  * 格式化错误日志输出
  */
-
 app.use(
   error({
     postFormat: (e, { stack, ...rest }) =>

@@ -1,5 +1,5 @@
 'use strict';
-const { Model } = require('sequelize');
+const { Model, UUIDV4 } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Form extends Model {
@@ -8,7 +8,18 @@ module.exports = (sequelize, DataTypes) => {
 
   Form.init(
     {
-      title: DataTypes.STRING,
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: UUIDV4, //
+      },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: true,
+        },
+      },
       content: DataTypes.STRING,
       desc: DataTypes.STRING,
       tag: DataTypes.STRING,

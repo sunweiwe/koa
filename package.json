@@ -1,11 +1,11 @@
 {
-  "name": "koa",
+  "name": "prello-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "sun",
+  "main": "src/index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node ./index.js",
-    "dev": "nodemon ./index.js"
+    "start": "cross-env NODE_ENV=production ts-node ./src/index.js",
+    "dev": "nodemon --ext js,ts --exec 'ts-node ./src/index.js'"
   },
   "keywords": [
     "koa",
