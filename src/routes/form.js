@@ -5,7 +5,7 @@ const auth = jwt({ secret });
 
 const router = new Router({ prefix: '/api/rest/form' });
 
-const { findAll, create, update, destroy } = require('../controller/form.ts');
+const { findAll, create, update, destroy } = require('../controller/form');
 
 router.get('/', auth, findAll);
 

@@ -6,12 +6,7 @@ class FormController {
    * form list
    * @param {*} ctx
    */
-  async findAll(ctx: {
-    header: { authorization: any };
-    response: { status: number };
-    session: any;
-    body: { status: number; data: any; token: any; message: string };
-  }) {
+  async findAll(ctx) {
     const token = ctx.header.authorization;
 
     const decryptToken = auth.decrypt(token);
@@ -45,12 +40,7 @@ class FormController {
    *
    * @param {*} ctx
    */
-  async create(ctx: {
-    verifyParams: (arg0: { title: { type: string; required: boolean } }) => void;
-    header: { authorization: any };
-    request: { body: any };
-    body: { form: any; code: number; message: string };
-  }) {
+  async create(ctx) {
     ctx.verifyParams({
       title: {
         type: 'string',
@@ -77,13 +67,7 @@ class FormController {
     };
   }
 
-  async update(ctx: {
-    verifyParams: (arg0: { id: { type: string; required: boolean } }) => void;
-    params: { id?: '' | undefined };
-    header: { authorization: any };
-    request: { body: any };
-    body: { form: any; code: number; message: string };
-  }) {
+  async update(ctx) {
     ctx.verifyParams({
       id: {
         type: 'string',
@@ -120,12 +104,7 @@ class FormController {
     };
   }
 
-  async destroy(ctx: {
-    verifyParams: (arg0: { id: { type: string; required: boolean } }) => void;
-    params: { id?: '' | undefined };
-    throw: (arg0: number, arg1: string) => void;
-    body: { form: any; code: number; message: string };
-  }) {
+  async destroy(ctx) {
     ctx.verifyParams({
       id: {
         type: 'string',
