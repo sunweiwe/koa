@@ -4,8 +4,8 @@
   "description": "sun",
   "main": "src/index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production ts-node ./src/index.js",
-    "dev": "nodemon --ext js,ts --exec 'ts-node ./src/index.js'"
+    "start": "cross-env NODE_ENV=production node ./src/index.js",
+    "dev": "nodemon --ext js,ts --exec  node ./src/index.js"
   },
   "keywords": [
     "koa",
