@@ -1,5 +1,5 @@
 const { sequelize } = require('../model/index.js');
-const jsonwebtoken = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const { secret } = require('../config/index.js');
 
 class UserController {
@@ -144,7 +144,7 @@ class UserController {
     let userToken = {
       phone: user.phone,
     };
-    const token = jsonwebtoken.sign(userToken, secret, { expiresIn: '1h' }); //token签名 有效期为1小时
+    const token = jwt.sign(userToken, secret, { expiresIn: '7d' }); //token签名 有效期为1小时
     const session = ctx.session;
     session[user.phone] = token;
     ctx.body = {
