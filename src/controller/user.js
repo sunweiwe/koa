@@ -127,17 +127,17 @@ class UserController {
     });
     const user = ctx.request.body;
 
-    const repeatUser = await sequelize.models.User.findOne({
+    const { dataValues } = await sequelize.models.User.findOne({
       where: {
         phone: user.phone,
       },
     });
 
-    if (repeatUser.password !== user.password) {
+    if (dataValues.password !== user.password) {
       ctx.throw(500, '密码错误！');
     }
 
-    if (!repeatUser) {
+    if (!dataValues) {
       ctx.throw(404, '用户不存在！');
     }
 
@@ -150,6 +150,9 @@ class UserController {
     ctx.body = {
       message: '获取token成功',
       code: 200,
+      data: {
+        ...dataValues,
+      },
       token,
     };
   }
